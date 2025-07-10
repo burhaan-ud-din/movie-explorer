@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, {Suspense} from 'react';
 import Image from "next/image";
 
 interface Props {
@@ -10,7 +10,6 @@ interface Props {
 const Page: React.FC<Props> = ({params}) => {
   return (
    <div>
-       <div>{params.id}</div>
        <Suspense fallback={<Loading />}>
            <MovieDetails movieId={params.id} />
        </Suspense>
@@ -35,12 +34,6 @@ async function fetchMovieDetails(movieId: string) {
     // Try both ways to access the API key
     const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY || process.env.TMDB_API_KEY
 
-    console.log("Checking environment variables...")
-    console.log("NEXT_PUBLIC_TMDB_API_KEY exists:", !!process.env.NEXT_PUBLIC_TMDB_API_KEY)
-    console.log("TMDB_API_KEY exists:", !!process.env.TMDB_API_KEY)
-    console.log("Final API Key exists:", !!apiKey)
-    console.log("Movie ID:", movieId)
-
     if (!apiKey) {
         throw new Error(`TMDB API key is not configured. 
     Please add TMDB_API_KEY=e5380df62a7ca1d7327025a899f50844 to your environment variables.
@@ -57,7 +50,6 @@ async function fetchMovieDetails(movieId: string) {
 
     try {
         const url = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&language=en-US`
-        console.log("Fetching from:", url.replace(apiKey, "API_KEY_HIDDEN"))
 
         const response = await fetch(url, {
             next: { revalidate: 3600 },
@@ -73,11 +65,8 @@ async function fetchMovieDetails(movieId: string) {
             throw new Error(`Failed to fetch movie details: ${response.status} ${response.statusText}`)
         }
 
-        const data = await response.json()
-        console.log("Movie data fetched successfully:", data.title)
-        return data
+        return await response.json()
     } catch (error) {
-        console.error("Error fetching movie details:", error)
         throw error
     }
 }
