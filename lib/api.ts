@@ -1,5 +1,8 @@
 const TMDB_API_URL = "https://api.themoviedb.org/3"
 
+// Helper function to add delay for showcasing Suspense
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+
 export async function fetchPopularMovies() {
   const API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY
   if (!API_KEY) {
@@ -7,6 +10,9 @@ export async function fetchPopularMovies() {
     return null
   }
   try {
+    // Add 2-second delay to showcase Suspense loading
+    await delay(2000)
+    
     const response = await fetch(`${TMDB_API_URL}/movie/popular?api_key=${API_KEY}&language=en-US&page=1`)
     if (!response.ok) {
       // More specific error handling could be added here
@@ -28,6 +34,9 @@ export async function fetchTopRatedMovies() {
     return null
   }
   try {
+    // Add 2-second delay to showcase Suspense loading
+    await delay(2000)
+    
     const response = await fetch(`${TMDB_API_URL}/movie/top_rated?api_key=${API_KEY}&language=en-US&page=1`)
     if (!response.ok) {
       throw new Error(`API call failed with status: ${response.status}`)
@@ -47,6 +56,9 @@ export async function fetchUpcomingMovies() {
     return null
   }
   try {
+    // Add 2-second delay to showcase Suspense loading
+    await delay(2000)
+    
     const response = await fetch(`${TMDB_API_URL}/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1`)
     if (!response.ok) {
       throw new Error(`API call failed with status: ${response.status}`)
@@ -66,6 +78,9 @@ export async function fetchNowPlayingMovies() {
     return null
   }
   try {
+    // Add 2-second delay to showcase Suspense loading
+    await delay(2000)
+    
     const response = await fetch(`${TMDB_API_URL}/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1`)
     if (!response.ok) {
       throw new Error(`API call failed with status: ${response.status}`)
@@ -86,6 +101,9 @@ export async function fetchMovieDetail(id: string) {
     return null
   }
   try {
+    // Add 2-second delay to showcase Suspense loading
+    await delay(2000)
+    
     const response = await fetch(`${TMDB_API_URL}/movie/${id}?api_key=${API_KEY}&language=en-US`)
     if (!response.ok) {
       return null // Movie not found
