@@ -1,22 +1,30 @@
-import { fetchPopularMovies } from "@/lib/api"
+import { fetchTopRatedMovies } from "@/lib/api"
 import Image from "next/image"
 import Link from "next/link"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: 'Top Rated Movies - MovieExplorer',
+  description: 'Discover the highest rated movies of all time',
+}
 
 // Define the type for a movie object based on TMDB API response
 interface Movie {
   id: number
   title: string
   poster_path: string | null
+  release_date: string
+  vote_average: number
 }
 
-export default async function HomePage() {
-  const movies: Movie[] | null = await fetchPopularMovies()
+export default async function TopRatedPage() {
+  const movies: Movie[] | null = await fetchTopRatedMovies()
 
   if (!movies) {
     return (
       <main className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-center h-64">
-          <p className="text-red-500 text-xl">Failed to load movies. Please try again later.</p>
+          <p className="text-red-500 text-xl">Failed to load top-rated movies. Please try again later.</p>
         </div>
       </main>
     )
@@ -25,9 +33,12 @@ export default async function HomePage() {
   return (
     <main className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2">Popular Movies</h1>
-        <p className="text-muted-foreground text-lg">Discover the most popular movies right now</p>
+        <h1 className="text-4xl font-bold mb-2">Top Rated Movies</h1>
+        <p className="text-muted-foreground text-lg">
+          The highest rated movies of all time, as voted by movie lovers worldwide
+        </p>
       </div>
+      
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
         {movies.map((movie) => (
           <Link href={`/movies/${movie.id}`} key={movie.id} className="group">
@@ -42,15 +53,29 @@ export default async function HomePage() {
                 width={500}
                 height={750}
                 className="object-cover w-full h-full"
-                // Optional: Add placeholder for better perceived loading
                 placeholder="blur"
                 blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mN8/x8AAuMB8DtXNJsAAAAASUVORK5CYII="
               />
             </div>
-            <h2 className="mt-3 text-lg font-semibold truncate group-hover:text-primary transition-colors">{movie.title}</h2>
+            <div className="mt-3">
+              <h2 className="text-lg font-semibold truncate group-hover:text-primary transition-colors">
+                {movie.title}
+              </h2>
+              <div className="flex items-center justify-between mt-1">
+                <span className="text-sm text-muted-foreground">
+                  {movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A'}
+                </span>
+                <div className="flex items-center space-x-1">
+                  <span className="text-yellow-500">★</span>
+                  <span className="text-sm font-medium">
+                    {movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A'}
+                  </span>
+                </div>
+              </div>
+            </div>
           </Link>
         ))}
       </div>
     </main>
   )
-}
+} 
